@@ -2,11 +2,8 @@ package ipResolver
 
 import (
 	"encoding/json"
-	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
 )
 
 const (
@@ -18,46 +15,19 @@ type response struct {
 	Ip string `json:"ip_address"`
 }
 
-func getEnv(key string) (string, error) {
-	value := os.Getenv(key)
-	if len(value) == 0 {
-		return "", errors.New(fmt.Sprintf("Please set the %s environment variable", key))
-	}
-
-	return value, nil
-}
-
-func resolverURL() (string, error) {
-	return getEnv("RESOLVER_URL")
-}
-
-func resolverAPIKey() (string, error) {
-	return getEnv("API_KEY")
-}
-
 func handleError(err error) (string, error) {
 	return "", err
 }
 
-func ResolveIp() (string, error) {
+func ResolveIp(resolverURL string, resolverAPIKey string) (string, error) {
 	client := &http.Client{}
-
-	resolverURL, err := resolverURL()
-	if err != nil {
-		return handleError(err)
-	}
 
 	req, err := http.NewRequest(getVerb, resolverURL, nil)
 	if err != nil {
 		return handleError(err)
 	}
 
-	apiKey, err := resolverAPIKey()
-	if err != nil {
-		return handleError(err)
-	}
-
-	req.Header.Add(apiKeyParam, apiKey)
+	req.Header.Add(apiKeyParam, resolverAPIKey)
 
 	resp, err := client.Do(req)
 	if err != nil {
