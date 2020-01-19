@@ -1,4 +1,4 @@
-package ipResolver
+package ipresolver
 
 import (
 	"encoding/json"

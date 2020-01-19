@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
-	"./ipResolver"
+	"./ipresolver"
 	"./route53"
 )
 
@@ -33,7 +33,7 @@ func recordSet() string {
 }
 
 func main() {
-	ip, err := ipResolver.ResolveIp(resolverURL(), resolverAPIKey())
+	ip, err := ipresolver.ResolveIp(resolverURL(), resolverAPIKey())
 	if err != nil {
 		panic(err)
 	}
