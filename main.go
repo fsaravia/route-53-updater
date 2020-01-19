@@ -1,10 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"os"
 	"./ipresolver"
 	"./route53"
+	"fmt"
+	"os"
 )
 
 func getEnv(key string) string {
@@ -38,7 +38,7 @@ func main() {
 		panic(err)
 	}
 
- 	session := route53.CreateSession()
+	session := route53.CreateSession()
 
 	output, err := route53.UpsertZone(session, route53HostedZoneId(), recordSet(), ip)
 	if err != nil {

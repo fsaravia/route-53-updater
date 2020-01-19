@@ -20,13 +20,13 @@ func CreateSession() *route53.Route53 {
 }
 
 func UpsertZone(session *route53.Route53, hostedZoneId string, recordSet string, recordSetValue string) (string, error) {
-	change := &route53.Change {
+	change := &route53.Change{
 		Action: aws.String(upsertAction),
-		ResourceRecordSet: &route53.ResourceRecordSet {
+		ResourceRecordSet: &route53.ResourceRecordSet{
 			Name: aws.String(recordSet),
 			Type: aws.String(recordSetType),
 			TTL:  aws.Int64(defaultTTL),
-			ResourceRecords: []*route53.ResourceRecord {
+			ResourceRecords: []*route53.ResourceRecord{
 				{
 					Value: aws.String(recordSetValue),
 				},
@@ -36,8 +36,8 @@ func UpsertZone(session *route53.Route53, hostedZoneId string, recordSet string,
 
 	input := &route53.ChangeResourceRecordSetsInput{
 		HostedZoneId: aws.String(hostedZoneId),
-		ChangeBatch:  &route53.ChangeBatch{
-			Changes:  []*route53.Change{ change },
+		ChangeBatch: &route53.ChangeBatch{
+			Changes: []*route53.Change{change},
 		},
 	}
 
