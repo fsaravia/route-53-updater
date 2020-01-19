@@ -24,11 +24,26 @@ func resolverAPIKey() string {
 	return getEnv("API_KEY")
 }
 
+func route53HostedZoneId() string {
+	return getEnv("HOSTED_ZONE_ID")
+}
+
+func recordSet() string {
+	return getEnv("RECORD_SET")
+}
+
 func main() {
 	ip, err := ipResolver.ResolveIp(resolverURL(), resolverAPIKey())
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("The IP address of this device is: %s", ip)
+ 	session := route53.CreateSession()
+
+	output, err := route53.UpsertZone(session, route53HostedZoneId(), recordSet(), ip)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(output)
 }
