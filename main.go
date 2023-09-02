@@ -1,9 +1,9 @@
 package main
 
 import (
-	"./ipresolver"
-	"./route53"
 	"fmt"
+	"github.com/fsaravia/route-53-updater/ipresolver"
+	"github.com/fsaravia/route-53-updater/route53"
 	"os"
 )
 
