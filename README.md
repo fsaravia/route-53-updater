@@ -4,36 +4,53 @@
 
 ## What?
 
-This is a small tool that updates a record in AWS Route53 with a dynamic IP address.
+This is a small Go tool that updates an AWS Route53 `A` record with a dynamic public IP address.
 
-It works on two stages:
+The process has two stages:
 
-### Resolve local IP address
+### 1. Resolve the current public IP address
 
-In order to resolve the local IP address, this tool requires an external service that accepts a GET request and returns a JSON response in the following form:
+The tool expects an external HTTP endpoint that accepts a `GET` request and returns JSON in either of these forms:
 
 ```json
 {
-	"ip": "127.0.0.1"
+  "ip": "127.0.0.1"
 }
 ```
 
-An example for the code of such a service can be found [here](https://gist.github.com/fsaravia/13f4b94d5a370b1198f8474422c8b862)
+or:
 
-### Update IP address on Route53
+```json
+{
+  "ip_address": "127.0.0.1"
+}
+```
 
-Once the local IP address has been obtained, it calls Route53 and updates an `A` record with the value of said IP address.
+An example implementation of such a service can be found [here](https://gist.github.com/fsaravia/13f4b94d5a370b1198f8474422c8b862).
+
+### 2. Update Route53
+
+Once the public IP is resolved, the tool sends an UPSERT request to Route53 for the configured `A` record.
 
 ## Configuration
 
-This tool depends entirely on environment variables, if unset or empty, it will fail.
+Configuration is provided through environment variables. If any required variable is missing, the process exits with an error.
 
-* `RESOLVER_URL`: The URL of the IP resolver to which a GET request will be sent.
-* `API_KEY`: The API key of the URL resolver. This API key will be sent as a header under the value `x-api-key`, following the AWS Lambda conventions.
-* `HOSTED_ZONE_ID`: The ID of the AWS Route53 hosted zone.
-* `RECORD_SET`: The FQDN of the record set to update.
+- `RESOLVER_URL`: URL of the IP resolver endpoint.
+- `API_KEY`: API key sent as the `x-api-key` request header.
+- `HOSTED_ZONE_ID`: Route53 hosted zone ID.
+- `RECORD_SET`: FQDN of the record to update.
 
-## Usage:
+## Logging
+
+The application logs extensively to STDOUT with UTC timestamps, including:
+
+- startup and configuration loading (without printing secrets),
+- resolver request/response metadata and IP parsing,
+- Route53 client initialization and UPSERT submission,
+- success/failure status and error context.
+
+## Usage
 
 ```bash
 RESOLVER_URL='<AN_URL>' \
@@ -43,7 +60,7 @@ RECORD_SET='<YOUR_RECORD_SET>' \
 go run ./main.go
 ```
 
-## Example:
+## Example
 
 ```bash
 RESOLVER_URL='https://resolver.example.org/whatsmyip' \

@@ -1,0 +1,7 @@
+# Build artifacts
+*.exe
+*.out
+*.test
+
+# Common Go binaries
+route-53-updater
