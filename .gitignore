@@ -5,3 +5,4 @@
 
 # Common Go binaries
 route-53-updater
+dist/

@@ -26,7 +26,7 @@ or:
 }
 ```
 
-An example implementation of such a service can be found [here](https://gist.github.com/fsaravia/13f4b94d5a370b1198f8474422c8b862).
+This repository includes the Lambda resolver implementation in `cmd/whatsmyip`.
 
 ### 2. Update Route53
 
@@ -60,7 +60,25 @@ RECORD_SET='<YOUR_RECORD_SET>' \
 go run ./main.go
 ```
 
-## Example
+## Example resolver
+
+The `cmd/whatsmyip` command is an example Lambda resolver. It returns the caller IP address as JSON:
+
+```json
+{
+  "ip_address": "127.0.0.1"
+}
+```
+
+Build the Lambda zip with:
+
+```bash
+./scripts/build-whatsmyip.sh
+```
+
+By default the script writes `dist/whatsMyIp.zip`.
+
+Once deployed behind an HTTP endpoint, use that endpoint as `RESOLVER_URL`:
 
 ```bash
 RESOLVER_URL='https://resolver.example.org/whatsmyip' \
